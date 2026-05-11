@@ -1,6 +1,6 @@
-# Computer Networking
+Computer Networking
 
-# 🛡️ Nexus Control - Remote Administration Tool (Educational Project)
+# Project - Remote Administration Tool
 
 > **⚠️ DISCLAIMER:** This software is developed solely for **educational purposes** as a final project for the Network Programming course at **University of Science - VNUHCM** (Trường ĐHKHTN - ĐHQG HCM). The developers assume no liability and are not responsible for any misuse or damage caused by this program.
 
