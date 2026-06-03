@@ -1,6 +1,6 @@
-Computer Networking
+# Remote Administration Tool
 
-# Project - Remote Administration Tool
+Đồ án Mạng máy tính
 
 > **⚠️ DISCLAIMER:** This software is developed solely for **educational purposes** as a final project for the Network Programming course at **University of Science - VNUHCM** (Trường ĐHKHTN - ĐHQG HCM). The developers assume no liability and are not responsible for any misuse or damage caused by this program.
 
