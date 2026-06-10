@@ -1,7 +1,0 @@
-- server:
-    dotnet build (mỗi khi dựng lại code)
-    dotnet run (để chạy)
-- client: node web_server.js
-
-- Đóng gói file thành server.exe
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
