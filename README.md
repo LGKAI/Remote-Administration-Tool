@@ -1,6 +1,8 @@
 # Remote Administration Tool
 
-> **⚠️ TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM:** Phần mềm này được phát triển hoàn toàn vì **mục đích giáo dục** (đồ án môn học). Nhóm phát triển không chịu trách nhiệm pháp lý và không chịu trách nhiệm cho bất kỳ sự lạm dụng hoặc thiệt hại nào do chương trình này gây ra.
+Đồ án Mạng máy tính
+
+> **⚠️ TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM:** Phần mềm này được phát triển hoàn toàn vì **mục đích giáo dục** (đồ án môn Mạng máy tính). Nhóm phát triển không chịu trách nhiệm pháp lý và không chịu trách nhiệm cho bất kỳ sự lạm dụng hoặc thiệt hại nào do chương trình này gây ra.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple) ![Language](https://img.shields.io/badge/Language-C%23-blue) ![Platform](https://img.shields.io/badge/Platform-Windows-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
