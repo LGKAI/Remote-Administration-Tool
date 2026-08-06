@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "vlZAnLo1LYI=",
+  "success": true,
+  "projectFilePath": "D:\\CoSoNganhIT\\7_ComputerNetworking\\Project_Remote-Administration-Tool\\source\\server\\server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\aforge\\2.2.5\\aforge.2.2.5.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\aforge.video\\2.2.5\\aforge.video.2.2.5.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\aforge.video.directshow\\2.2.5\\aforge.video.directshow.2.2.5.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\system.codedom\\10.0.0\\system.codedom.10.0.0.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\system.io.pipelines\\10.0.0\\system.io.pipelines.10.0.0.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\system.management\\10.0.0\\system.management.10.0.0.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\system.text.encodings.web\\10.0.0\\system.text.encodings.web.10.0.0.nupkg.sha512",
+    "C:\\Users\\leogiakhanh\\.nuget\\packages\\system.text.json\\10.0.0\\system.text.json.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

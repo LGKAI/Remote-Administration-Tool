@@ -1,100 +1,81 @@
 # Remote Administration Tool
 
-Đồ án Mạng máy tính
+Đồ án Môn Mạng máy tính
 
-Video Demo: https://youtu.be/uTRhVYS-dbo?si=z7fixEOgxTJXViWt
+🎥 **Video Demo:** [Xem trên YouTube](https://youtu.be/uTRhVYS-dbo?si=z7fixEOgxTJXViWt)
 
 > **⚠️ TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM:** Phần mềm này được phát triển hoàn toàn vì **mục đích giáo dục** (đồ án môn Mạng máy tính). Nhóm phát triển không chịu trách nhiệm pháp lý và không chịu trách nhiệm cho bất kỳ sự lạm dụng hoặc thiệt hại nào do chương trình này gây ra.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple) ![Language](https://img.shields.io/badge/Language-C%23-blue) ![Platform](https://img.shields.io/badge/Platform-Windows-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
+---
+
 ## 📖 Giới thiệu
-Nexus Control là một công cụ Quản trị Từ xa (RAT) gọn nhẹ được xây dựng từ đầu để minh họa các khái niệm lập trình mạng ở mức hệ thống.
+Nexus Control là một công cụ Quản trị Từ xa (RAT) được xây dựng từ đầu để minh họa các khái niệm lập trình mạng ở mức hệ thống. Điểm đặc biệt của dự án này là kiến trúc **"Không phụ thuộc" (Zero-Dependency)**. Chúng tôi tự triển khai giao thức WebSocket, truyền dữ liệu qua TCP nguyên thủy, và giao tiếp trực tiếp với Windows API mà không dùng đến các thư viện bên thứ ba cồng kềnh.
 
-Khác với các công cụ thương mại, dự án này tập trung vào kiến trúc **"Không phụ thuộc" (Zero-Dependency)**:
-* **Giao thức tùy chỉnh:** Tự triển khai bắt tay **WebSocket (RFC 6455)** và truyền dữ liệu qua TCP Socket thô mà không sử dụng thư viện WebSocket bên ngoài.
-* **Tương tác hệ thống:** Tương tác trực tiếp với Windows API (User32, Kernel32) để theo dõi và quản lý tiến trình.
+## ⚙️ Cơ chế hoạt động
+Hệ thống này được chia làm 3 thành phần chính hoạt động phối hợp với nhau:
 
-## 🚀 Tính năng chính
+1. **Server (Máy mục tiêu / Bị điều khiển):** 
+   - Là một ứng dụng (được viết bằng C# .NET 8.0). 
+   - Khi chạy trên máy mục tiêu, nó sẽ ẩn mình, tự động khởi động cùng Windows và mở sẵn các cổng kết nối (như WebSocket) để chờ lệnh. 
+   - Ngoài ra nó sẽ báo danh qua Telegram khi máy tính có kết nối mạng.
+2. **Client (Trang Web Quản trị):** 
+   - Là một trang web có giao diện hiện đại (HTML/CSS/JS) dùng để điều khiển Server.
+   - Trang web này sẽ kết nối trực tiếp đến **Server (Máy mục tiêu)** qua địa chỉ IP bằng giao thức WebSocket để gửi các lệnh theo thời gian thực (như xem webcam, chụp màn hình, tắt máy, quản lý file, v.v.).
+3. **Telegram Bot (Kênh dự phòng):**
+   - Đóng vai trò như một kênh điều khiển phụ trợ. Bạn có thể nhắn tin trực tiếp với Bot Telegram để ra lệnh cho máy mục tiêu (lấy ảnh màn hình, đánh cắp file, thực thi lệnh) kể cả khi không vào được trang Web điều khiển.
 
-### 1. Kết nối cốt lõi
-* **Máy chủ WebSocket tùy chỉnh:** TCP Listener tự triển khai xử lý nâng cấp HTTP và mã hóa/giải mã WebSocket một cách thủ công.
-* **Kiến trúc đa luồng:** Xử lý nhiều lệnh cùng lúc mà không làm đóng băng giao diện người dùng.
+---
 
-### 2. Giám sát hệ thống
-* **Truyền phát Webcam theo thời gian thực:** Sử dụng `AForge.Video` với tính năng nén JPEG tối ưu (chất lượng 50%) để truyền qua TCP mượt mà.
-* **Chụp ảnh màn hình trực tiếp:** Chụp các khung hình desktop sử dụng GDI+ và truyền qua mã hóa Base64.
-* **Keylogger toàn cầu:** Triển khai `SetWindowsHookEx` (WH_KEYBOARD_LL) để nắm bắt các phím bấm ở cấp độ kernel.
+## 🚀 Tính năng nổi bật
 
-### 3. Quản lý từ xa
-* **Quản lý tiến trình:** Liệt kê các tác vụ đang chạy và buộc dừng tiến trình theo PID.
-* **Kiểm soát ứng dụng:** Quét phần mềm đã cài đặt thông qua Registry và khả năng khởi chạy từ xa.
-* **Trình quản lý tệp:** Liệt kê thư mục từ xa, tải tệp xuống (được tái tạo thông qua Blob trong trình duyệt) và xóa tệp.
-* **Điều khiển nguồn:** Chức năng Tắt máy và Khởi động lại từ xa.
+* **Điều khiển thời gian thực:** Truyền phát Webcam, chụp màn hình trực tiếp.
+* **Theo dõi hệ thống:** Keylogger ngầm (lưu lại phím bấm), quản lý tiến trình (Task Manager), duyệt và tải file từ xa.
+* **Lệnh hệ thống:** Tắt máy, khởi động lại, thực thi mã ẩn.
+* **Chống chịu ngắt kết nối:** Tự động báo danh lại qua Telegram, cơ chế gửi file/ảnh qua Bot khi đường truyền chính bị chặn.
+* **Giao diện Web siêu đẹp:** Hỗ trợ Dark mode, hiệu ứng Glassmorphism.
 
-### 4. Kênh C2 dự phòng (Tích hợp Telegram)
-* Hoạt động như một kênh điều khiển dự phòng khi kết nối TCP trực tiếp bị chặn.
-* **Khả năng của Bot:**
-    * `/scan`: Kiểm tra trạng thái mục tiêu.
-    * `/screen`: Nhận ngay ảnh chụp màn hình qua Telegram.
-    * `/get <path>`: Đánh cắp tệp một cách âm thầm.
-    * `/cmd`: Thực thi các lệnh shell ẩn.
-    * Sử dụng kỹ thuật **Long Polling** với `HttpClient` gốc.
+---
 
-## 🛠️ Ngăn xếp Công nghệ
+## 🛠️ Hướng dẫn Cài đặt & Sử dụng (Dành cho người mới)
 
-* **Máy chủ (Agent):** C# .NET 8.0 (Windows Forms - Chế độ ẩn).
-* **Máy khách (Dashboard):** HTML5, CSS3 (Giao diện Glassmorphism), Vanilla JavaScript.
-* **Giao tiếp:** Raw TCP Sockets, Giao thức WebSocket, Telegram Bot API.
+Dưới đây là các bước chi tiết để chạy hệ thống. Bạn có thể thử nghiệm chạy cả Server và Client trên cùng một máy tính.
 
-## 📂 Cấu trúc thư mục
-
-```text
-source/
-├── client/                 # Mã nguồn máy khách (Web Dashboard)
-│   ├── public/             # Các tệp tĩnh (HTML, CSS, JS) cho giao diện
-│   ├── package.json        # Thông tin cấu hình và dependencies Node.js
-│   ├── package-lock.json
-│   └── web_server.js       # Máy chủ web cục bộ phục vụ Dashboard
-├── server/                 # Mã nguồn máy chủ (Agent chạy trên máy mục tiêu)
-│   ├── Program.cs          # Điểm bắt đầu (Entry point) của ứng dụng
-│   ├── server.cs           # Logic xử lý chính (Sockets, Commands, API...)
-│   ├── server.csproj       # Tệp cấu hình project C# (.NET 8.0)
-│   └── server.resx         # Tài nguyên ứng dụng
-└── README.md               # Tài liệu hướng dẫn dự án
-```
-
-## 🔧 Hướng dẫn Cài đặt & Sử dụng
-
-### Yêu cầu hệ thống
-- Máy chủ (Server): Yêu cầu .NET 8.0 SDK để biên dịch.
-- Máy khách (Client): Môi trường Node.js để chạy web server cục bộ.
-
-### Cài đặt và Chạy
-
-1. **Khởi chạy Máy chủ (Server):**
-   Mở terminal trong thư mục `server` và chạy các lệnh:
+### Bước 1: Khởi động Server (Phần mềm bị điều khiển)
+Yêu cầu máy tính phải cài đặt **.NET 8.0 SDK**.
+1. Mở Terminal (Command Prompt / PowerShell) và trỏ vào thư mục `server`:
    ```bash
-   # Dựng lại mã nguồn (mỗi khi có thay đổi)
-   dotnet build
-   
-   # Chạy máy chủ
+   cd source/server
+   ```
+2. Chạy ứng dụng Server:
+   ```bash
    dotnet run
    ```
+   *(Lúc này Server sẽ khởi động, kiểm tra mạng, gửi báo danh Telegram và mở cổng kết nối. Bạn hãy để cửa sổ Terminal này chạy ngầm)*
 
-   *Hoặc nếu muốn đóng gói thành file thực thi duy nhất (server.exe):*
+### Bước 2: Mở Giao diện Web Điều khiển (Client)
+Yêu cầu máy tính phải cài đặt **Node.js**.
+1. Mở một cửa sổ Terminal **mới** (không tắt Terminal ở Bước 1) và trỏ vào thư mục `client`:
    ```bash
-   dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+   cd source/client
    ```
-   Sau đó bạn có thể lấy file `server.exe` để chạy trực tiếp trên máy nạn nhân (máy chủ).
-
-2. **Khởi chạy Máy khách (Client):**
-   Mở terminal trong thư mục `client`, cài đặt các gói (nếu cần) và khởi chạy server cục bộ:
+2. Cài đặt các thư viện phụ thuộc cho Web Server (chỉ cần làm ở lần chạy đầu tiên):
+   ```bash
+   npm install
+   ```
+3. Khởi chạy máy chủ Web:
    ```bash
    node web_server.js
    ```
+4. **Vào trang điều khiển:** Mở trình duyệt web của bạn (Chrome, Edge, Cốc Cốc...) và truy cập vào đường dẫn:
+   👉 **[http://localhost:8080](http://localhost:8080)**
 
-3. **Sử dụng:**
-   - Khi chạy `server.exe` (hoặc `dotnet run`), máy chủ sẽ chạy ngầm trên máy mục tiêu.
-   - Truy cập vào giao diện web từ máy khách (thường là qua cổng mà `web_server.js` cấu hình).
-   - Nhập địa chỉ IP của máy mục tiêu trong Bảng điều khiển Web (Web Dashboard) và nhấp vào **Connect** để bắt đầu điều khiển từ xa.
+   Tại giao diện này, bạn nhập IP là `127.0.0.1` (nếu đang test Server ngay trên máy này) và bấm **Connect** để bắt đầu kết nối!
+
+### Bước 3: Đóng gói thành file .exe hoàn chỉnh (Tùy chọn)
+Nếu bạn muốn đóng gói Server thành một file `server.exe` duy nhất để mang sang máy khác chạy (mà máy đó không cần cài đặt .NET), hãy mở Terminal ở thư mục `server` và chạy lệnh này:
+```bash
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+```
+File thực thi cuối cùng sẽ được tạo ra tại thư mục: `server/bin/Release/net8.0-windows/win-x64/publish/`. Bạn chỉ cần copy file `server.exe` bên trong đó đi là được.
