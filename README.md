@@ -6,8 +6,6 @@
 
 > **⚠️ TUYÊN BỐ MIỄN TRỪ TRÁCH NHIỆM:** Phần mềm này được phát triển hoàn toàn vì **mục đích giáo dục** (đồ án môn Mạng máy tính). Nhóm phát triển không chịu trách nhiệm pháp lý và không chịu trách nhiệm cho bất kỳ sự lạm dụng hoặc thiệt hại nào do chương trình này gây ra.
 
-![.NET](https://img.shields.io/badge/.NET-8.0-purple) ![Language](https://img.shields.io/badge/Language-C%23-blue) ![Platform](https://img.shields.io/badge/Platform-Windows-blue) ![License](https://img.shields.io/badge/License-MIT-green)
-
 ---
 
 ## 📖 Giới thiệu
@@ -35,6 +33,34 @@ Hệ thống này được chia làm 3 thành phần chính hoạt động phố
 * **Lệnh hệ thống:** Tắt máy, khởi động lại, thực thi mã ẩn.
 * **Chống chịu ngắt kết nối:** Tự động báo danh lại qua Telegram, cơ chế gửi file/ảnh qua Bot khi đường truyền chính bị chặn.
 * **Giao diện Web siêu đẹp:** Hỗ trợ Dark mode, hiệu ứng Glassmorphism.
+
+---
+
+## 📁 Cấu trúc thư mục mã nguồn
+
+```text
+source/
+├── client/                     # Web Dashboard điều khiển (Node.js & Vanilla Web)
+│   ├── public/                 # Giao diện và tài nguyên tĩnh
+│   │   ├── background/         # Video nền giao diện
+│   │   ├── sound/              # Hiệu ứng âm thanh tương tác
+│   │   ├── favicon.jpg         # Icon ứng dụng
+│   │   ├── hello.png           # Ảnh minh họa
+│   │   ├── index.html          # Trang giao diện quản trị trung tâm
+│   │   ├── script.js           # Xử lý logic giao diện, kết nối WebSocket và gửi/nhận lệnh
+│   │   └── style.css           # Phong cách giao diện (Glassmorphism, Dark mode)
+│   ├── package.json            # Khai báo phụ thuộc ứng dụng Node.js (Express)
+│   ├── package-lock.json       # Khóa phiên bản các package Node.js
+│   └── web_server.js           # Máy chủ Web tĩnh phục vụ giao diện điều khiển (Port 8080)
+│
+├── server/                     # Ứng dụng quản trị phía máy mục tiêu (C# .NET 8.0 Windows)
+│   ├── Program.cs              # Entry point ứng dụng, xử lý khởi động và định tuyến luồng chạy
+│   ├── server.cs               # Logic cốt lõi: WebSocket Server, Keylogger, Webcam, Screen capture, Telegram Bot
+│   ├── server.csproj           # Cấu hình dự án .NET và các thư viện (AForge, System.Management...)
+│   └── server.resx             # Tệp tài nguyên của ứng dụng Windows Forms
+│
+└── README.md                   # Tài liệu hướng dẫn sử dụng và giới thiệu đồ án
+```
 
 ---
 
