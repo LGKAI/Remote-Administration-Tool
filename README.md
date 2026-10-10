@@ -1,6 +1,6 @@
 # Remote Administration Tool
 
-Đồ án Môn Mạng máy tính
+Đồ án Mạng máy tính
 
 🎥 **Video Demo:** [Xem trên YouTube](https://youtu.be/uTRhVYS-dbo?si=z7fixEOgxTJXViWt)
 
